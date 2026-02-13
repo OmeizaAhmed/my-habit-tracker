@@ -1,18 +1,17 @@
-"use client"
-import { Button } from "@/components/ui/button";
-import { toast } from "sonner";
-import { useRouter } from "next/navigation";
+
+import GetStarted from "@/components/get-started";
+import Header from "@/components/header";
+import Image from "next/image";
+import Hero from "./images/hero";
 
 export default function Home() {
-  const navigate = useRouter();
-  function handleGetStarted(){
-    navigate.push("/protected")
-    toast.success("Thank you for getting started")
-  }
+
   return (
-    <main className="min-h-screen flex flex-col items-center">
-      
-      <Button variant="secondary" onClick={handleGetStarted}>Get Started</Button>
+    <main className="min-h-screen">
+      <Header />
+      <div className="mx-auto">
+      <Hero />
+      </div>
     </main>
   );
 }
