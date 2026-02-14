@@ -7,7 +7,7 @@ import Hero from "./images/hero";
 export default function Home() {
 
   return (
-    <main className="min-h-screen">
+    <main className="min-h-screen relative">
       <Header />
       <div className="mx-auto">
       <Hero />

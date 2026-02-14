@@ -1,0 +1,80 @@
+"use server";
+
+import { createClient } from "@/lib/supabase/server";
+
+export type userHabitsType = {
+  id: string;
+  created_at: string;
+  user_id: string;
+  last_updated: string;
+  streak: number;
+  habit_name: string;
+  habit_type: string;
+  is_active: boolean;
+};
+
+export async function getUserDetails() {
+  const supabase = await createClient();
+  const { data, error } = await supabase.auth.getClaims();
+
+  if (error || !data?.claims) {
+    return null;
+  }
+
+  return data.claims;
+}
+
+export async function addNewHabit(newHabit: {
+  habit_name: string;
+  habit_type: string;
+  user_id: string;
+}) {
+  try {
+    const supabase = await createClient();
+    const { error } = await supabase.from("habits").insert(newHabit);
+    if (error) {
+      throw new Error(error.message);
+    }
+    return { status: "success", error: null };
+  } catch (e) {
+    console.error(e);
+    return { status: "error", error: e };
+  }
+}
+
+export async function getUserHabits() {
+  const supabase = await createClient();
+  const { data: habits } = await supabase.from("habits").select();
+  return habits as userHabitsType[];
+}
+
+export async function deleteHabit(habit_id: string) {
+  const supabase = await createClient();
+  const { data, error } = await supabase
+    .from("habits")
+    .delete()
+    .eq("id", habit_id);
+
+  if (error) {
+    console.log(error);
+    return { status: "error" };
+  }
+  return { status: "success" };
+}
+
+export async function editHabit(
+  habit_id: string,
+  editedHabit: { habit_name: string; habit_type: string },
+) {
+  const supabase = await createClient();
+  const { error } = await supabase
+    .from("habits")
+    .update(editedHabit)
+    .eq("id", habit_id);
+  if (error) {
+    console.error(error.message);
+    return { status: "error" };
+  } else {
+    return { status: "success" };
+  }
+}
