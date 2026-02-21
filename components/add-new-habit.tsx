@@ -19,10 +19,12 @@ import { Input } from "@/components/ui/input";
 import { useEffect, useState } from "react";
 import { addNewHabit, getUserDetails } from "@/app/actions/actions";
 import { toast } from "sonner";
+import getRandomQuote from "@/utils/quote";
 
 export function AddNewHabit() {
   const [ habitForm, setHabitForm ] = useState({habit_name: "", habit_type: "boolean"})
   const [userId, setUserId] = useState('');
+  const [ quote, setQuote ] = useState('');
   async function handleSumbit(){
     const newHabit = {...habitForm, habit_name: habitForm.habit_name.trim(), user_id: userId}
     if(newHabit.habit_name && newHabit.habit_type && newHabit.user_id){
@@ -46,6 +48,7 @@ export function AddNewHabit() {
   }
   useEffect(()=>{
     getUserId()
+    setQuote(getRandomQuote())
   }, [])
   return (
     <FieldGroup>
@@ -71,7 +74,7 @@ export function AddNewHabit() {
           </SelectContent>
         </Select>
         <FieldDescription>
-          We&apos;ll send updates to this address.
+          {quote}
         </FieldDescription>
       </Field>
       <Field orientation="horizontal">

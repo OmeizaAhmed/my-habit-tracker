@@ -2,20 +2,23 @@
 import { deleteHabit, getUserHabits } from "@/app/actions/actions";
 import { useEffect, useState } from "react";
 import type { userHabitsType } from "@/app/actions/actions";
-import { Trash2, FilePenLine } from "lucide-react";
+import { Trash2, Loader2 } from "lucide-react";
 import { AlertDialogDestructive } from "./shadcn/AlertDialogDestructive";
 import { toast } from "sonner";
 import { EditDialogue } from "./shadcn/EditDialogue";
 
 export default function YourHabits() {
-  const [habits, setHabit] = useState<userHabitsType[]>([]);
+  const [habits, setHabit] = useState<userHabitsType[]>([])
+  const [loading, setLoading ] = useState(false);
 
   async function fetchUserHabit() {
     const userHabits = await getUserHabits();
     setHabit(userHabits);
   }
   useEffect(() => {
+    setLoading(true)
     fetchUserHabit();
+    setLoading(false)
   }, []);
 
   async function handleDeleteHabit(id: string) {
@@ -25,6 +28,7 @@ export default function YourHabits() {
     else toast.error("Error deleting habit :(");
   }
 
+  if(loading) return <Loader2 />
   return (
     <ul>
       {habits?.length

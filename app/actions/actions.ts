@@ -13,6 +13,10 @@ export type userHabitsType = {
   is_active: boolean;
 };
 
+export type userLog = userHabitsType & {
+  habit_log: { id: string; created_at: string; log: string }[];
+};
+
 export async function getUserDetails() {
   const supabase = await createClient();
   const { data, error } = await supabase.auth.getClaims();
@@ -77,4 +81,26 @@ export async function editHabit(
   } else {
     return { status: "success" };
   }
+}
+
+export async function getHabitLogDetails() {
+  const supabase = await createClient();
+  const { data: habit_log, error } = await supabase
+    .from("habits")
+    .select(
+      `
+  id,
+  created_at,
+  user_id,
+  last_updated,
+  streak,
+  habit_name,
+  habit_type,
+  is_active,
+  habit_log (id, created_at, log)
+    `,
+    )
+    .eq("habit_log.created_at", "2026-02-21");
+  if (error) console.error(error);
+  return habit_log as userLog[];
 }

@@ -4,7 +4,6 @@ import { getUserDetails } from "../actions/actions";
 import YourHabits from "@/components/get-user-habits";
 import { AddNewHabit } from "@/components/add-new-habit";
 import { Suspense } from "react";
-import { Loader2 } from "lucide-react";
 
 
 export default async function ProtectedPage() {
