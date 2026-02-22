@@ -83,7 +83,7 @@ export async function editHabit(
   }
 }
 
-export async function getHabitLogDetails() {
+export async function getHabitLogDetails(today:string) {
   const supabase = await createClient();
   const { data: habit_log, error } = await supabase
     .from("habits")
@@ -100,7 +100,19 @@ export async function getHabitLogDetails() {
   habit_log (id, created_at, log)
     `,
     )
-    .eq("habit_log.created_at", "2026-02-21");
+    .eq("habit_log.created_at", today);
   if (error) console.error(error);
   return habit_log as userLog[];
+}
+
+export async function removeHabitLog(log_id: string){
+  const supabase = await createClient();
+  const {data, error} = await supabase.from('habit_log').delete().eq('id', log_id)
+  if(error) console.error(error.message)
+}
+
+export async function addHabitLog(habit_id: string, date: string) {
+  const supabase = await createClient();
+  const {data, error} = await supabase.from('habit_log').insert({habit_id: habit_id, created_at: date, log: "done"})
+  console.log(data)
 }
